@@ -1,0 +1,30 @@
+  553  whoami
+  554  clear
+  555  lks 
+  556  clear
+  557  ls 
+  558  cd class_activity2/
+  559  clear
+  560  ls 
+  561  ssh-keygen -t ed25519 -C chamroenstd@gmail.com
+  562  cat ~/.ssh/id_ed25519.pub
+  563  clear
+  564  git push 
+  565  ls 
+  566  nano forkchild.c
+  567  gcc forkchild.c -o forkchild
+  568  ./forkchild 
+  569  ./forkchild > command_used_forkchild.txt 
+  570  ls 
+  571  cat command_used_forkchild.txt 
+  572  mv command_used_forkchild.txt result_forkchild.txt
+  573  clear
+  574  ls 
+  575  history: history | tail -n 15 > command_used_forkchild.txt
+  576  history | tail -n 15 > command_used_forkchild.txt
+  577  clear
+  578  ls 
+  579  cat hi
+  580  cat command_used_forkchild.txt 
+  581  clear
+  582  history | tail -n 30 > command_used_forkchild.txt

@@ -1,37 +1,54 @@
-// copyfilesyscall.c
-#include <unistd.h>
-#include <fcntl.h>
+#include <windows.h>
 #include <stdio.h>
 
+#define BUFFER_SIZE 1024
+
 int main() {
-    int src_fd, dest_fd;
-    char buffer[1024];
-    ssize_t bytesRead;
+    HANDLE hSrc, hDest;
+    DWORD bytesRead, bytesWritten;
+    char buffer[BUFFER_SIZE];
 
     // Open source file
-    src_fd = open("result.txt", O_RDONLY);
-    if (src_fd < 0) {
-        perror("Error opening result.txt");
+    hSrc = CreateFile(
+        "result.txt",
+        GENERIC_READ,
+        0,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+
+    if (hSrc == INVALID_HANDLE_VALUE) {
+        printf("Error opening source file\n");
         return 1;
     }
 
-    // Open destination file
-    dest_fd = open("copyresult.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (dest_fd < 0) {
-        perror("Error opening copyresult.txt");
-        close(src_fd);
+    // Create destination file
+    hDest = CreateFile(
+        "copyresult.txt",
+        GENERIC_WRITE,
+        0,
+        NULL,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+
+    if (hDest == INVALID_HANDLE_VALUE) {
+        printf("Error creating destination file\n");
+        CloseHandle(hSrc);
         return 1;
     }
 
-    // Copy content
-    while ((bytesRead = read(src_fd, buffer, sizeof(buffer))) > 0) {
-        write(dest_fd, buffer, bytesRead);
+    // Copy loop
+    while (ReadFile(hSrc, buffer, BUFFER_SIZE, &bytesRead, NULL) && bytesRead > 0) {
+        WriteFile(hDest, buffer, bytesRead, &bytesWritten, NULL);
     }
 
-    // Close files
-    close(src_fd);
-    close(dest_fd);
+    CloseHandle(hSrc);
+    CloseHandle(hDest);
 
-    printf("File copied successfully using system calls.\n");
+    printf("File copied successfully (Windows)\n");
     return 0;
 }
